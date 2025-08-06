@@ -249,6 +249,7 @@ if df is not None:
 
 # st.link_button("Profile", url="/profile")
 
+#run in terminal after finish coding
 # poetry export -f requirements.txt --with dev --output requirements.txt --without-hashes
 
 # streamlit run main.py
