@@ -4,6 +4,7 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+from numpy.ma.core import floor_divide
 from wordcloud import WordCloud
 import numpy as np
 import helper
@@ -29,13 +30,14 @@ url = st.text_input("**OR** paste a **URL** to a CSV or Excel file,\n(e.g. paste
 #https://raw.githubusercontent.com/mwaskom/seaborn-data/master/geyser.csv.
 
 
-df = None
+
 # Handle file upload
 if uploaded_file is not None:
     if uploaded_file.name.endswith('.csv'):
         df = pd.read_csv(uploaded_file)
     elif uploaded_file.name.endswith('.xlsx'):
         df = pd.read_excel(uploaded_file)
+    st.session_state.df = df
 # Handle URL input
 elif url:
     try:
@@ -47,6 +49,7 @@ elif url:
             df = pd.read_excel(io.BytesIO(response.content))
         else:
             st.error("The URL must end with .csv or .xlsx")
+        st.session_state.df = df
     except Exception as e:
         st.error(f"Failed to fetch the file: {e}")
 
@@ -149,7 +152,7 @@ if df is not None:
     # creating a new categorical variable out of numeric values
     st.subheader("Optional: Categorizing")
     categorizing_from_numeric_yes = st.checkbox("creating a new **categorical** variable out of **numeric** values"
-                                                  + ", e.g. age group out of age", key="categorizing_from_numeric_yes1")
+                                                  + ", e.g. age group out of age", key="categorizing_from_numeric_yes1",value=True)
     add_group4 = False
     if categorizing_from_numeric_yes:
         helper.categorizing_from_numeric(df)
@@ -158,7 +161,7 @@ if df is not None:
     # creating a new categorical variable out of nominal values
     st.subheader("Optional: Additional Categorizing")
     categorizing_from_nominal_yes = st.checkbox("creating a new **categorical** variable out of **nominal** values"
-                                                  + ", e.g. quartiles out of month names", key="categorizing_from_nominal_yes1")
+                                                  + ", e.g. quartiles out of month names", key="categorizing_from_nominal_yes1",value=True)
     if categorizing_from_nominal_yes:
         helper.categorizing_from_nominal(df)
 
@@ -167,8 +170,9 @@ if df is not None:
     st.write("")
     st.write("")
 
-    df = st.session_state.df
-    chart_viewer_yes = st.checkbox("Do you want to use additional charts?", key='chart_viewer_yes')
+
+
+    chart_viewer_yes = st.checkbox("Do you want to use additional charts ?", key='chart_viewer_yes')
     if chart_viewer_yes:
         st.subheader("Chart Generator")
 
@@ -207,7 +211,6 @@ if df is not None:
 
 
 
-
     st.write("")
     st.write("")
     st.write("")
@@ -226,6 +229,7 @@ if df is not None:
                        split=True, inner="quart", fill=False,
                        palette=palette_choice, ax=ax)
         st.pyplot(fig)
+
 
     st.write("")
     st.write("")
@@ -264,6 +268,11 @@ if df is not None:
         else:
             st.warning("Selected column is empty or invalid.")
 
+
+
+
+if df is not None:
+    st.session_state.df = df
 
 #st.session_state.df = df
 

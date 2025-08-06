@@ -53,7 +53,7 @@ def categorizing_from_numeric(df):
             label4 = st.text_input("**Label for Group 4**", value="65-90", key="lab4")
     new_var_name = st.text_input("**Name of the new categorical variable**", value="age_group")
 
-    if st.button("Create Categorical Variable"):
+    if st.button("Create Categorical Variable", key="b_nu"):
         def recode(val):
             if lower1 <= val <= upper1:
                 return label1
@@ -114,7 +114,7 @@ def categorizing_from_nominal(df):
     new_cat_var_nom = st.text_input("New variable name", value=f"{selected_col_n}_grouped", key="new_cat_var_nom")
 
     # Button to create new variable
-    if st.button("Create Categorical Variable", key="create_cat_var"):
+    if st.button("Create Categorical Variable", key="create_cat_varr"):
         def recode_nominal(value):
             if value in group1_vals:
                 return label_n1
