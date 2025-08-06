@@ -62,6 +62,27 @@ if df is not None:
 
 
 
+cols_with_na = df.columns[df.isnull().any()].tolist()
+if not cols_with_na:
+    st.write("✅ There are no missing values in the DataFrame.")
+else:
+    # Filter rows with at least one missing value
+    missing_rows = df[df.isnull().any(axis=1)]
+    # Sort columns by number of missing values in descending order
+    missing_counts = df[cols_with_na].isnull().sum().sort_values(ascending=False)
+    sorted_columns = missing_counts.index.tolist()
+    # Display the relevant part of the DataFrame
+    missing_data_sorted = missing_rows[sorted_columns]
+    st.write("⚠️ Rows with missing values:")
+    st.write(missing_data_sorted)
+
+
+
+
+if df is not None:
+    if 'df' not in st.session_state:
+        st.session_state.df = df
+
     # categorical variables
     st.write("### Categorical Variables")
     # bar chart
@@ -141,13 +162,12 @@ if df is not None:
         helper.categorizing_from_nominal(df)
 
 
-
     st.write("")
     st.write("")
     st.write("")
 
     df = st.session_state.df
-    chart_viewer_yes = st.checkbox("Do you want to use the additional charts?", key='chart_viewer_yes')
+    chart_viewer_yes = st.checkbox("Do you want to use additional charts?", key='chart_viewer_yes')
     if chart_viewer_yes:
         st.subheader("Chart Generator")
 
