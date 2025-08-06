@@ -66,6 +66,7 @@ cols_with_na = df.columns[df.isnull().any()].tolist()
 if not cols_with_na:
     st.write("✅ There are no missing values in the DataFrame.")
 else:
+    st.write("### Missing Values")
     # Filter rows with at least one missing value
     missing_rows = df[df.isnull().any(axis=1)]
     # Sort columns by number of missing values in descending order
